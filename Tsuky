@@ -1,0 +1,77 @@
+import React, { useEffect, useState } from "react";
+import { Button } from "@/components/ui/button";
+import { useRouter } from "next/router";
+import { motion } from "framer-motion";
+
+export default function HomePage() {
+  const router = useRouter();
+
+  const handleBuy = (product) => {
+    router.push(`/checkout?product=${product}`);
+  };
+
+  return (
+    <div className="min-h-screen bg-gradient-to-b from-purple-900 to-indigo-800 text-white">
+      <header className="text-center py-10">
+        <h1 className="text-5xl font-extrabold text-gold-500 drop-shadow-lg">
+          Enchanted Tales Store
+        </h1>
+        <p className="mt-4 text-lg">Discover magical illustrations and fantasy stories</p>
+      </header>
+      <main className="grid grid-cols-1 md:grid-cols-3 gap-8 p-10">
+        <div className="bg-white bg-opacity-20 rounded-2xl p-6 shadow-xl">
+          <img src="/illustration1.jpg" alt="Fantasy Illustration" className="rounded-xl" />
+          <h2 className="text-xl font-semibold mt-4">The Mystic Forest</h2>
+          <p className="mt-2">A breathtaking journey through enchanted woods.</p>
+          <Button className="mt-4 w-full bg-gold-500 text-purple-900" onClick={() => handleBuy('mystic_forest')}>
+            Buy & Download
+          </Button>
+        </div>
+        <div className="bg-white bg-opacity-20 rounded-2xl p-6 shadow-xl">
+          <img src="/illustration2.jpg" alt="Fantasy Book" className="rounded-xl" />
+          <h2 className="text-xl font-semibold mt-4">The Sorcerer’s Tale</h2>
+          <p className="mt-2">An ancient story of magic and power.</p>
+          <Button className="mt-4 w-full bg-gold-500 text-purple-900" onClick={() => handleBuy('sorcerer_tale')}>
+            Buy & Download
+          </Button>
+        </div>
+      </main>
+    </div>
+  );
+}
+
+export function CheckoutPage() {
+  const router = useRouter();
+  const { product } = router.query;
+  const [showPortal, setShowPortal] = useState(false);
+
+  useEffect(() => {
+    setTimeout(() => setShowPortal(true), 1000);
+  }, []);
+
+  return (
+    <div className="min-h-screen flex flex-col items-center justify-center bg-purple-900 text-white relative overflow-hidden">
+      {showPortal && (
+        <motion.div
+          initial={{ opacity: 0, scale: 0 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 1.5, ease: "easeOut" }}
+          className="absolute inset-0 flex items-center justify-center"
+        >
+          <div className="w-96 h-96 bg-indigo-500 rounded-full shadow-2xl border-4 border-gold-500 flex items-center justify-center text-white text-2xl font-bold animate-pulse">
+            Welcome to the Magic Realm!
+          </div>
+        </motion.div>
+      )}
+      <h1 className="text-4xl font-bold mt-10">Payment Successful!</h1>
+      <p className="mt-4 text-lg">Thank you for your purchase. Click below to download your file.</p>
+      <a
+        href={`/downloads/${product}.pdf`}
+        className="mt-6 px-6 py-3 bg-gold-500 text-purple-900 font-semibold rounded-xl shadow-lg"
+        download
+      >
+        Download Now
+      </a>
+    </div>
+  );
+}
